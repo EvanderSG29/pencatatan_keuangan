@@ -25,3 +25,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
     Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
 });
+
+// Public asset routes
+Route::get('/logo', function () {
+    $path = storage_path('app/public/img/Logo.png');
+    if (!file_exists($path)) {
+        abort(404);
+    }
+    return response()->file($path, [
+        'Content-Type' => 'image/png',
+        'Cache-Control' => 'public, max-age=3600',
+    ]);
+})->name('logo');
