@@ -25,14 +25,30 @@ class KategoriController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama_kategori' => 'required|string|max:255',
+            'nama_kategori' => 'required|array',
+            'nama_kategori.*' => 'required|string|max:255',
         ]);
 
-        $data = $request->only('nama_kategori');
-        $data['id_user'] = auth()->id();
+        $kategoriData = [];
+        $userId = auth()->id();
+        $now = now();
 
-        Kategori::create($data);
+        foreach ($request->nama_kategori as $nama) {
+            // Hanya proses input yang tidak kosong
+            if (!empty($nama)) {
+                $kategoriData[] = [
+                    'nama_kategori' => $nama,
+                    'id_user' => $userId,
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ];
+            }
+        }
 
+        // Gunakan insert untuk bulk-inserting agar lebih efisien
+        if (!empty($kategoriData)) {
+            Kategori::insert($kategoriData);
+        }
         return redirect()->route('kategori.index')->with('success', 'Kategori berhasil ditambahkan.');
     }
 
