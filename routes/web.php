@@ -19,5 +19,9 @@ Route::resource('kategori', App\Http\Controllers\KategoriController::class);
 // Resource routes for transaksi
 Route::resource('transaksi', App\Http\Controllers\TransaksiController::class);
 
-// Users listing
-Route::get('/users', [UserController::class, 'index'])->name('users.index')->middleware('auth');
+// Users listing and edit
+Route::middleware('auth')->group(function () {
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
+    Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
+});
