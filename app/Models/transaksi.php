@@ -8,7 +8,7 @@ class Transaksi extends Model
 {
     protected $table = 'tb_transaksi';
     protected $primaryKey = 'id_transaksi';
-    protected $fillable = ['id_user', 'tanggal_transaksi', 'nama_transaksi', 'id_kategori', 'jenis_transaksi', 'nominal'];
+    protected $fillable = ['id_user', 'tanggal_transaksi', 'nama_transaksi', 'id_kategori', 'jenis_transaksi', 'qty', 'nominal'];
 
     public function kategori()
     {

@@ -35,20 +35,39 @@ class TransaksiController extends Controller
      */
     public function store(Request $request)
     {
+        // Validate arrays for multiple transaction entries
         $request->validate([
-            'tanggal_transaksi' => 'required|date',
-            'nama_transaksi' => 'required|string|max:255',
-            'id_kategori' => 'required|exists:tb_kategori,id_kategori',
-            'jenis_transaksi' => 'required|string|max:255',
-            'nominal' => 'required|integer',
+            'tanggal_transaksi' => 'required|array',
+            'tanggal_transaksi.*' => 'required|date',
+            'nama_transaksi' => 'required|array',
+            'nama_transaksi.*' => 'required|string|max:255',
+            'id_kategori' => 'required|array',
+            'id_kategori.*' => 'required|exists:tb_kategori,id_kategori',
+            'jenis_transaksi' => 'required|array',
+            'jenis_transaksi.*' => 'required|string|max:255',
+            'qty' => 'required|array',
+            'qty.*' => 'required|integer|min:1',
+            'nominal' => 'required|array',
+            'nominal.*' => 'required|integer|min:0',
         ]);
 
-        $data = $request->only(['tanggal_transaksi', 'nama_transaksi', 'id_kategori', 'jenis_transaksi', 'nominal']);
-        $data['id_user'] = auth()->id();
+        $userId = auth()->id();
+        $count = count($request->input('nama_transaksi', []));
 
-        Transaksi::create($data);
+        // Create multiple transaction records
+        for ($i = 0; $i < $count; $i++) {
+            Transaksi::create([
+                'id_user' => $userId,
+                'tanggal_transaksi' => $request->input("tanggal_transaksi.$i"),
+                'nama_transaksi' => $request->input("nama_transaksi.$i"),
+                'id_kategori' => $request->input("id_kategori.$i"),
+                'jenis_transaksi' => $request->input("jenis_transaksi.$i"),
+                'qty' => $request->input("qty.$i"),
+                'nominal' => $request->input("nominal.$i"),
+            ]);
+        }
 
-        return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil ditambahkan.');
+        return redirect()->route('transaksi.index')->with('success', $count . ' Transaksi berhasil ditambahkan.');
     }
 
     /**
@@ -82,12 +101,13 @@ class TransaksiController extends Controller
             'nama_transaksi' => 'required|string|max:255',
             'id_kategori' => 'required|exists:tb_kategori,id_kategori',
             'jenis_transaksi' => 'required|string|max:255',
+            'qty' => 'required|integer|min:1',
             'nominal' => 'required|integer',
         ]);
 
         $this->authorizeOwnership($transaksi);
 
-        $transaksi->update($request->only(['tanggal_transaksi', 'nama_transaksi', 'id_kategori', 'jenis_transaksi', 'nominal']));
+        $transaksi->update($request->only(['tanggal_transaksi', 'nama_transaksi', 'id_kategori', 'jenis_transaksi', 'qty', 'nominal']));
 
         return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil diperbarui.');
     }

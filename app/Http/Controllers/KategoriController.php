@@ -33,23 +33,79 @@ class KategoriController extends Controller
         $userId = auth()->id();
         $now = now();
 
+        // Fetch existing names normalized for server-side duplicate check
+        $existing = Kategori::where('id_user', $userId)->get()->pluck('nama_kategori')->map(function($v){
+            return mb_strtolower(trim($v));
+        })->toArray();
+
+        $duplicates = [];
         foreach ($request->nama_kategori as $nama) {
-            // Hanya proses input yang tidak kosong
-            if (!empty($nama)) {
-                $kategoriData[] = [
-                    'nama_kategori' => $nama,
-                    'id_user' => $userId,
-                    'created_at' => $now,
-                    'updated_at' => $now,
-                ];
+            $namaTrim = trim($nama);
+            if ($namaTrim === '') continue;
+            $norm = mb_strtolower($namaTrim);
+            if (in_array($norm, $existing)) {
+                $duplicates[] = $namaTrim;
+                continue;
             }
+            $kategoriData[] = [
+                'nama_kategori' => $namaTrim,
+                'id_user' => $userId,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ];
+            $existing[] = $norm; // avoid duplicates within the same batch
         }
 
-        // Gunakan insert untuk bulk-inserting agar lebih efisien
         if (!empty($kategoriData)) {
             Kategori::insert($kategoriData);
         }
-        return redirect()->route('kategori.index')->with('success', 'Kategori berhasil ditambahkan.');
+
+        $message = '';
+        if (!empty($kategoriData)) {
+            $message = count($kategoriData) . ' kategori berhasil ditambahkan.';
+        }
+        if (!empty($duplicates)) {
+            $msgDup = ' Duplikat tidak ditambahkan: ' . implode(', ', $duplicates);
+            $message = trim($message . ' ' . $msgDup);
+        }
+
+        return redirect()->route('kategori.index')->with('success', $message ?: 'Tidak ada kategori baru ditambahkan.');
+    }
+
+    /**
+     * Preview default categories server-side to detect duplicates.
+     */
+    public function previewDefaults(Request $request)
+    {
+        $defaults = $request->input('defaults', []);
+        $userId = auth()->id();
+
+        $existing = Kategori::where('id_user', $userId)->get()->pluck('nama_kategori')->map(function($v){
+            return mb_strtolower(trim($v));
+        })->toArray();
+
+        $result = ['to_add' => [], 'duplicates' => []];
+        foreach ($defaults as $d) {
+            $norm = mb_strtolower(trim($d));
+            if ($norm === '') continue;
+            if (in_array($norm, $existing)) {
+                $result['duplicates'][] = $d;
+            } else {
+                $result['to_add'][] = $d;
+            }
+        }
+
+        return response()->json($result);
+    }
+
+    /**
+     * Clear all categories for the authenticated user.
+     */
+    public function clear(Request $request)
+    {
+        $userId = auth()->id();
+        Kategori::where('id_user', $userId)->delete();
+        return redirect()->route('kategori.index')->with('success', 'Semua kategori berhasil dihapus.');
     }
 
     public function show(Kategori $kategori)

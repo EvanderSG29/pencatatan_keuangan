@@ -64,11 +64,11 @@ return [
     */
 
     'logo' => '<b>Pencatatan</b>Keuangan',
-    'logo_img' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
-    'logo_img_class' => 'brand-image img-circle elevation-3',
-    'logo_img_xl' => null,
-    'logo_img_xl_class' => 'brand-image-xs',
-    'logo_img_alt' => 'Admin Logo',
+    'logo_img' => 'vendor/adminlte/dist/img/Logo.png',
+    // 'logo_img_class' => 'brand-image img-circle elevation-3',
+    // 'logo_img_xl' => null,
+    // 'logo_img_xl_class' => 'brand-image-xs',
+    'logo_img_alt' => '',
 
     /*
     |--------------------------------------------------------------------------
@@ -83,16 +83,16 @@ return [
     |
     */
 
-    'auth_logo' => [
-        'enabled' => false,
-        'img' => [
-            'path' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
-            'alt' => 'Auth Logo',
-            'class' => '',
-            'width' => 50,
-            'height' => 50,
-        ],
-    ],
+    // 'auth_logo' => [
+    //     'enabled' => true,
+    //     'img' => [
+    //         'path' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
+    //         'alt' => 'Auth Logo',
+    //         'class' => '',
+    //         'width' => 50,
+    //         'height' => 50,
+    //     ],
+    // ],
 
     /*
     |--------------------------------------------------------------------------
@@ -113,7 +113,7 @@ return [
         'enabled' => true,
         'mode' => 'fullscreen',
         'img' => [
-            'path' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
+            'path' => 'vendor/adminlte/dist/img/Logo.png',
             'alt' => 'AdminLTE Preloader Image',
             'effect' => 'animation__shake',
             'width' => 60,
@@ -311,7 +311,7 @@ return [
         ],
 
         // Sidebar items:
-        ['header' => 'account_settings'],
+
         [
             'text' => 'Beranda',
             'url' => 'home',
@@ -322,10 +322,15 @@ return [
             'url' => 'kategori',
             'icon' => 'fas fa-fw fa-th-list',
         ],
-                [
+        [
             'text' => 'Riwayat Transaksi',
             'url' => 'transaksi',
             'icon' => 'fas fa-fw fa-history',
+        ],
+        [
+            'text' => 'Profil Saya',
+            'url' => 'users',
+            'icon' => 'fas fa-fw fa-user',
         ],
         // [
         //     'text' => 'multilevel',

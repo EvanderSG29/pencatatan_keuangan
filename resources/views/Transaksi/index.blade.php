@@ -21,6 +21,7 @@
                 <th>Nama Transaksi</th>
                 <th>Kategori</th>
                 <th>Jenis</th>
+                <th>Qty</th>
                 <th>Nominal</th>
                 <th>Aksi</th>
             </tr>
@@ -33,9 +34,9 @@
                     <td>{{ $transaksi->nama_transaksi }}</td>
                     <td>{{ $transaksi->kategori->nama_kategori ?? 'N/A' }}</td>
                     <td>{{ $transaksi->jenis_transaksi }}</td>
+                    <td>{{ $transaksi->qty }}</td>
                     <td>Rp {{ number_format($transaksi->nominal, 0, ',', '.') }}</td>
                     <td>
-                        <a href="{{ route('transaksi.show', $transaksi) }}" class="btn btn-info btn-sm">Lihat</a>
                         <a href="{{ route('transaksi.edit', $transaksi) }}" class="btn btn-warning btn-sm">Edit</a>
                         <form action="{{ route('transaksi.destroy', $transaksi) }}" method="POST" style="display:inline;">
                             @csrf

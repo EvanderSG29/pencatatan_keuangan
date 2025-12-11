@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('nama_transaksi');
             $table->foreignId('id_kategori');
             $table->string('jenis_transaksi');
+            $table->integer('qty')->default(1);
             $table->integer('nominal');
             $table->timestamps();
         });

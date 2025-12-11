@@ -38,6 +38,10 @@
             </select>
         </div>
         <div class="form-group">
+            <label for="qty">Qty:</label>
+            <input type="number" class="form-control" id="qty" name="qty" value="{{ $transaksi->qty }}" min="1" required>
+        </div>
+        <div class="form-group">
             <label for="nominal">Nominal:</label>
             <input type="number" class="form-control" id="nominal" name="nominal" value="{{ $transaksi->nominal }}" required>
         </div>
