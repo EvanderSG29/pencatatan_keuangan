@@ -12,6 +12,7 @@
                     @yield('card_header')
                 </div>
             </div>
+
             <div class="card-body">
                 @yield('card_body')
             </div>

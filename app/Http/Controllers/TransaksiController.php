@@ -35,7 +35,6 @@ class TransaksiController extends Controller
      */
     public function store(Request $request)
     {
-        // Validate arrays for multiple transaction entries
         $request->validate([
             'tanggal_transaksi' => 'required|array',
             'tanggal_transaksi.*' => 'required|date',
@@ -52,23 +51,28 @@ class TransaksiController extends Controller
         ]);
 
         $userId = auth()->id();
-        $count = count($request->input('nama_transaksi', []));
+        $count = count($request->nama_transaksi);
 
-        // Create multiple transaction records
         for ($i = 0; $i < $count; $i++) {
+            $qty = $request->qty[$i];
+            $nominal = $request->nominal[$i];
+
             Transaksi::create([
                 'id_user' => $userId,
-                'tanggal_transaksi' => $request->input("tanggal_transaksi.$i"),
-                'nama_transaksi' => $request->input("nama_transaksi.$i"),
-                'id_kategori' => $request->input("id_kategori.$i"),
-                'jenis_transaksi' => $request->input("jenis_transaksi.$i"),
-                'qty' => $request->input("qty.$i"),
-                'nominal' => $request->input("nominal.$i"),
+                'tanggal_transaksi' => $request->tanggal_transaksi[$i],
+                'nama_transaksi' => $request->nama_transaksi[$i],
+                'id_kategori' => $request->id_kategori[$i],
+                'jenis_transaksi' => $request->jenis_transaksi[$i],
+                'qty' => $qty,
+                'nominal' => $nominal,
+                'total_nominal' => $qty * $nominal,
             ]);
         }
 
-        return redirect()->route('transaksi.index')->with('success', $count . ' Transaksi berhasil ditambahkan.');
+        return redirect()->route('transaksi.index')
+            ->with('success', $count . ' Transaksi berhasil ditambahkan.');
     }
+
 
     /**
      * Display the specified resource.
@@ -102,15 +106,28 @@ class TransaksiController extends Controller
             'id_kategori' => 'required|exists:tb_kategori,id_kategori',
             'jenis_transaksi' => 'required|string|max:255',
             'qty' => 'required|integer|min:1',
-            'nominal' => 'required|integer',
+            'nominal' => 'required|integer|min:0',
         ]);
 
         $this->authorizeOwnership($transaksi);
 
-        $transaksi->update($request->only(['tanggal_transaksi', 'nama_transaksi', 'id_kategori', 'jenis_transaksi', 'qty', 'nominal']));
+        $qty = $request->qty;
+        $nominal = $request->nominal;
 
-        return redirect()->route('transaksi.index')->with('success', 'Transaksi berhasil diperbarui.');
+        $transaksi->update([
+            'tanggal_transaksi' => $request->tanggal_transaksi,
+            'nama_transaksi' => $request->nama_transaksi,
+            'id_kategori' => $request->id_kategori,
+            'jenis_transaksi' => $request->jenis_transaksi,
+            'qty' => $qty,
+            'nominal' => $nominal,
+            'total_nominal' => $qty * $nominal,
+        ]);
+
+        return redirect()->route('transaksi.index')
+            ->with('success', 'Transaksi berhasil diperbarui.');
     }
+
 
     /**
      * Remove the specified resource from storage.

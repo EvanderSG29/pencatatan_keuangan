@@ -2,251 +2,318 @@
 
 @section('title', 'Dashboard')
 
-@section('content_header')
- <div class="container_fluid">
-<div class="row mb-2">
-    <div class="col-sm-6">
-        <H1>Beranda</H1>
-    </div>
- </div>
- </div>
- @stop
-
 @section('content')
-    <!-- Main Statistics Row -->
-    <div class="row">
-        <div class="col-md-3">
-            <div class="small-box bg-info">
-                <div class="inner">
-                    <h4>Rp {{ number_format($pemasukan ?? 0, 0, ',', '.') }}</h4>
-                    <p>Pemasukan</p>
-                </div>
-                <div class="icon">
-                    <i class="fas fa-arrow-up text-white"></i>
-                </div>
-                <br>
-                <a href="{{ route('transaksi.index') }}" class="small-box-footer">
-                    More info <i class="fas fa-arrow-circle-right"></i>
-                </a>
-            </div>
-        </div>
+<div class="container-fluid">
 
-        <div class="col-md-3">
-            <div class="small-box bg-danger">
-                <div class="inner">
-                    <h4>Rp {{ number_format($pengeluaran ?? 0, 0, ',', '.') }}</h4>
-                    <p>Pengeluaran</p>
-                </div>
-                <div class="icon">
-                    <i class="fas fa-arrow-down text-white"></i>
-                </div>
-                <br>
-                <a href="{{ route('transaksi.index') }}" class="small-box-footer">
-                    More info <i class="fas fa-arrow-circle-right"></i>
-                </a>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="small-box bg-success">
-                <div class="inner">
-                    <h4>Rp {{ number_format($sisaSaldo ?? 0, 0, ',', '.') }}</h4>
-                    <p>Sisa Saldo</p>
-                </div>
-                <div class="icon">
-                    <i class="fas fa-wallet text-white"></i>
-                </div>
-                <br>
-                <a href="{{ route('transaksi.index') }}" class="small-box-footer">
-                    More info <i class="fas fa-arrow-circle-right"></i>
-                </a>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="small-box bg-primary">
-                <div class="inner">
-                    <h4>{{ $totalTransaksi }}</h4>
-                    <p>Total Transaksi</p>
-                </div>
-                <div class="icon">
-                    <i class="fas fa-list text-white"></i>
-                </div>
-                <br>
-                <a href="{{ route('transaksi.index') }}" class="small-box-footer">
-                    More info <i class="fas fa-arrow-circle-right"></i>
-                </a>
-            </div>
-        </div>
+    {{-- HEADER --}}
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="font-weight-bold mb-0">Dashboard Keuangan</h3>
+        <small class="text-muted">Ringkasan aktivitas finansial Anda</small>
     </div>
 
-    <!-- Analisis Kategori & Recent Transactions Row -->
+    {{-- ============================
+        BARIS 1 - 4 KARTU UTAMA
+    ============================ --}}
     <div class="row">
-        <div class="col-md-6">
-            <div class="card card-secondary">
-                <div class="card-header">
-                    <h3 class="card-title"><i class="fas fa-chart-pie mr-2"></i> Analisis Kategori</h3>
+
+        {{-- PEMASUKAN --}}
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm border-0">
+                <div class="card-body d-flex justify-content-between">
+                    <div>
+                        <p class="text-muted mb-1">Pemasukan</p>
+                        <h4>Rp {{ number_format($pemasukan,0,',','.') }}</h4>
+                    </div>
+                    <div class="icon-box bg-success text-white">
+                        <i class="fas fa-arrow-up"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- PENGELUARAN --}}
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm border-0">
+                <div class="card-body d-flex justify-content-between">
+                    <div>
+                        <p class="text-muted mb-1">Pengeluaran</p>
+                        <h4>Rp {{ number_format($pengeluaran,0,',','.') }}</h4>
+                    </div>
+                    <div class="icon-box bg-danger text-white">
+                        <i class="fas fa-arrow-down"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- SISA SALDO --}}
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm border-0">
+                <div class="card-body d-flex justify-content-between">
+                    <div>
+                        <p class="text-muted mb-1">Sisa Saldo</p>
+                        <h4>Rp {{ number_format($sisaSaldo,0,',','.') }}</h4>
+                    </div>
+                    <div class="icon-box bg-primary text-white">
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- TOTAL TRANSAKSI --}}
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm border-0">
+                <div class="card-body d-flex justify-content-between">
+                    <div>
+                        <p class="text-muted mb-1">Total Transaksi</p>
+                        <h4>{{ $totalTransaksi }}</h4>
+                    </div>
+                    <div class="icon-box bg-secondary text-white">
+                        <i class="fas fa-list"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    {{-- ============================
+        BARIS 2 - LINE CHART FULL
+    ============================ --}}
+    <div class="row">
+        <div class="col-md-12 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white border-0">
+                    <h5 class="mb-0"><i class="fas fa-chart-line mr-2"></i>Keuangan (Rentang 12 Bulan)</h5>
                 </div>
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h5>Pengeluaran Terbanyak</h5>
-                            @if(isset($pengeluaranTop) && $pengeluaranTop->count())
-                                <ol>
-                                    @foreach($pengeluaranTop as $item)
-                                        <li>{{ $item->nama_kategori }} — <strong>Rp {{ number_format($item->total_pengeluaran, 0, ',', '.') }}</strong></li>
-                                    @endforeach
-                                </ol>
-                            @else
-                                <div class="text-muted">Belum ada data pengeluaran</div>
-                            @endif
-                        </div>
-                        <div class="col-md-6">
-                            <h5>Pemasukan Terbanyak</h5>
-                            @if(isset($pemasukanTop) && $pemasukanTop->count())
-                                <ol>
-                                    @foreach($pemasukanTop as $item)
-                                        <li>{{ $item->nama_kategori }} — <strong>Rp {{ number_format($item->total_pemasukan, 0, ',', '.') }}</strong></li>
-                                    @endforeach
-                                </ol>
-                            @else
-                                <div class="text-muted">Belum ada data pemasukan</div>
-                            @endif
-                        </div>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col-md-12 text-center">
-                            <canvas id="donutPengeluaran" style="max-width:260px;margin:0 auto;"></canvas>
-                        </div>
-                    </div>
+                    <canvas id="lineChart" height="110"></canvas>
                 </div>
-                <div class="card-footer">
-                    <a href="{{ route('kategori.index') }}" class="btn btn-sm btn-outline-primary">Lihat Semua Kategori</a>
+            </div>
+        </div>
+    </div>
+
+
+    {{-- ============================
+        BARIS 3 - DONUT + KATEGORI
+    ============================ --}}
+    <div class="row">
+
+        {{-- DONUT PENGELUARAN --}}
+        <div class="col-md-4 mb-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-white border-0">
+                    <h5 class="mb-0"><i class="fas fa-chart-pie mr-2"></i>Pengeluaran per Kategori</h5>
+                </div>
+                <div class="card-body text-center">
+                    <canvas id="donutPengeluaran" height="180"></canvas>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-6">
-            <div class="card card-info">
-                <div class="card-header">
-                    <h3 class="card-title">
-                        <i class="fas fa-history mr-2"></i>
-                        Transaksi Terbaru
-                    </h3>
+        {{-- DONUT PEMASUKAN --}}
+        <div class="col-md-4 mb-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-white border-0">
+                    <h5 class="mb-0"><i class="fas fa-chart-pie mr-2"></i>Pemasukan per Kategori</h5>
+                </div>
+                <div class="card-body text-center">
+                    <canvas id="donutPemasukan" height="180"></canvas>
+                </div>
+            </div>
+        </div>
+
+        {{-- SEMUA KATEGORI (scroll) --}}
+        <div class="col-md-4 mb-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-white border-0">
+                    <h5 class="mb-0"><i class="fas fa-tags mr-2"></i>Daftar Kategori</h5>
+                </div>
+                <div class="card-body p-0" style="max-height: 290px; overflow-y:auto;">
+                    <ul class="list-group list-group-flush">
+                        @foreach($kategoriLabels as $idx => $kat)
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>{{ $kat }}</span>
+                                <strong>RP 
+                                    {{ number_format(($pemasukanKategori[$idx] ?? 0) + ($pengeluaranKategori[$idx] ?? 0),0,',','.') }}
+                                </strong>
+                            </li>
+                        @endforeach
+                    </ul>
+                    
+                </div>
+                <div class="">
+                    <small class="text-muted d-block p-2">* Total dari pemasukan dan pengeluaran per kategori</small>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+    {{-- ============================
+        BARIS 4 - HISTORY (2 kolom)
+    ============================ --}}
+    <div class="row">
+
+        {{-- HISTORY LEFT --}}
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white border-0">
+                    <h5 class="mb-0"><i class="fas fa-history mr-2"></i>Transaksi Terbaru</h5>
                 </div>
                 <div class="card-body p-0">
-                    @if ($recentTransaksi->count() > 0)
-                        <table class="table table-striped table-sm">
-                            <thead>
-                                <tr>
-                                    <th>Nama</th>
-                                    <th>Kategori</th>
-                                    <th>Jenis</th>
-                                    <th>Nominal</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($recentTransaksi as $transaksi)
-                                    <tr>
-                                        <td>{{ $transaksi->nama_transaksi }}</td>
-                                        <td>{{ $transaksi->kategori->nama_kategori ?? 'N/A' }}</td>
-                                        <td>
-                                            @if ($transaksi->jenis_transaksi == 'Pemasukan')
-                                                <span class="badge badge-success">Pemasukan</span>
-                                            @else
-                                                <span class="badge badge-danger">Pengeluaran</span>
-                                            @endif
-                                        </td>
-                                        <td>Rp {{ number_format($transaksi->nominal, 0, ',', '.') }}</td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    @else
-                        <div class="alert alert-info m-2">Belum ada transaksi</div>
-                    @endif
+                    @include('partials.history-table', ['data' => $recentTransaksi])
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Quick Actions Row -->
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card card-primary">
-                <div class="card-header">
-                    <h3 class="card-title">
-                        <i class="fas fa-bolt mr-2"></i>
-                        Aksi Cepat
-                    </h3>
+        {{-- HISTORY RIGHT (isi sama) --}}
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white border-0">
+                    <h5 class="mb-0"><i class="fas fa-history mr-2"></i>Transaksi Terbaru</h5>
                 </div>
-                <div class="card-body">
-                    <a href="{{ route('transaksi.create') }}" class="btn btn-primary">
-                        <i class="fas fa-plus"></i> Tambah Transaksi
-                    </a>
-                    <a href="{{ route('transaksi.index') }}" class="btn btn-info">
-                        <i class="fas fa-list"></i> Lihat Semua Transaksi
-                    </a>
-                    <a href="{{ route('kategori.index') }}" class="btn btn-warning">
-                        <i class="fas fa-tags"></i> Kelola Kategori
-                    </a>
+                <div class="card-body p-0">
+                    @include('partials.history-table', ['data' => $recentTransaksi])
                 </div>
             </div>
         </div>
-    </div>
-@stop
 
+    </div>
+
+</div>
+@endsection
+
+
+
+{{-- ============================
+    CUSTOM CSS
+============================ --}}
 @section('css')
-    {{-- Add here extra stylesheets --}}
-    <style>
-        /* Small dashboard tweaks */
-        .card .card-title i { margin-right: 8px; }
-    </style>
-@stop
+<style>
+.icon-box {
+    width: 45px;
+    height: 45px;
+    border-radius: 10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:20px;
+}
+.list-group-item {
+    padding: 10px 15px;
+}
 
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .icon-box {
+        width: 35px;
+        height: 35px;
+        font-size: 16px;
+    }
+    .card-body h4 {
+        font-size: 1.2rem;
+    }
+    .card-body p {
+        font-size: 0.9rem;
+    }
+    .table-responsive {
+        font-size: 0.85rem;
+    }
+    .btn {
+        font-size: 0.9rem;
+        padding: 0.375rem 0.75rem;
+    }
+}
+
+/* Make charts responsive */
+canvas {
+    max-width: 100% !important;
+    height: auto !important;
+}
+</style>
+@endsection
+
+
+
+{{-- ============================
+    CHART.JS
+============================ --}}
 @section('js')
-    <script> console.log("Hi, I'm using the Laravel-AdminLTE package!");</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+/* ===========================
+    DATA DARI CONTROLLER
+=========================== */
+const labels = {!! json_encode($labels) !!};
+const pemasukanLine = {!! json_encode($chartPemasukan) !!};
+const pengeluaranLine = {!! json_encode($chartPengeluaran) !!};
+
+const kategoriLabels = {!! json_encode($kategoriLabels) !!};
+const pemasukanKategori = {!! json_encode($pemasukanKategori) !!};
+const pengeluaranKategori = {!! json_encode($pengeluaranKategori) !!};
 
 
+/* ===========================
+    LINE CHART
+=========================== */
+new Chart(document.getElementById('lineChart'), {
+    type: 'line',
+    data: {
+        labels: labels,
+        datasets: [
+            {
+                label: 'Pemasukan',
+                data: pemasukanLine,
+                borderColor: '#28a745',
+                fill: false,
+                tension: 0.3
+            },
+            {
+                label: 'Pengeluaran',
+                data: pengeluaranLine,
+                borderColor: '#dc3545',
+                fill: false,
+                tension: 0.3
+            }
+        ]
+    },
+    options: { responsive: true }
+});
 
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@0.5.7"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-    (function(){
-        const labels = {!! json_encode(isset($pengeluaranTop) ? $pengeluaranTop->pluck('nama_kategori') : []) !!};
-        const dataVals = {!! json_encode(isset($pengeluaranTop) ? $pengeluaranTop->pluck('total_pengeluaran') : []) !!};
+/* ===========================
+    DONUT PENGELUARAN
+=========================== */
+new Chart(document.getElementById('donutPengeluaran'), {
+    type: 'doughnut',
+    data: {
+        labels: kategoriLabels,
+        datasets: [{
+            data: pengeluaranKategori,
+            backgroundColor: ['#ff6384','#36a2eb','#ffce56','#4bc0c0','#9966ff','#ff9f40'],
+        }]
+    }
+});
 
-        const canvas = document.getElementById('donutPengeluaran');
-        if (canvas && labels.length) {
-            const ctx = canvas.getContext('2d');
-            const bgColors = [
-                '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40'
-            ];
-            const colors = labels.map((_, i) => bgColors[i % bgColors.length]);
 
-            new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        data: dataVals,
-                        backgroundColor: colors,
-                        borderColor: '#fff',
-                        borderWidth: 2
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { position: 'bottom', labels: { boxWidth: 12 } },
-                        tooltip: { callbacks: { label: function(ctx) { return 'Rp ' + Number(ctx.raw).toLocaleString('id-ID'); } } }
-                    }
-                }
-            });
-        }
-    })();
-    </script>
-@stop
+/* ===========================
+    DONUT PEMASUKAN
+=========================== */
+new Chart(document.getElementById('donutPemasukan'), {
+    type: 'doughnut',
+    data: {
+        labels: kategoriLabels,
+        datasets: [{
+            data: pemasukanKategori,
+            backgroundColor: ['#36a2eb','#4bc0c0','#9966ff','#ffce56','#ff6384','#ff9f40'],
+        }]
+    }
+});
+</script>
+@endsection

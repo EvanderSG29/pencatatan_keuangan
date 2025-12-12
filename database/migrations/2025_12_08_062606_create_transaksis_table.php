@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('jenis_transaksi');
             $table->integer('qty')->default(1);
             $table->integer('nominal');
+            $table->bigInteger('total_nominal');
             $table->timestamps();
         });
     }
